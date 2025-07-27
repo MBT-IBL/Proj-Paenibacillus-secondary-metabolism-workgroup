@@ -25,12 +25,12 @@ for pf, row in seq_strain_table.iterrows():
     )
     if len(files) == 1:
         target = Path("JMF-sample-ID-assemblies-before202507") / files[0].name
-        symlink_name = f"Paenibacillus_sp_{st}.fna.gz"
+        symlink_name = f"Paenibacillus_sp_{st}.fa.gz"
         i = 1
         symlink = Path("Genome_fastas") / symlink_name
         while symlink.exists():
             exception_lines.append("\t".join([st, symlink_name]) + "\n")
-            symlink_name = f"Paenibacillus_sp_{st}_{i}.fna.gz"
+            symlink_name = f"Paenibacillus_sp_{st}_{i}.fa.gz"
             symlink = Path("Genome_fastas") / symlink_name
             exception_lines.append("\t".join([st, symlink_name]) + "\n")
             i += 1

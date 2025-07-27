@@ -52,3 +52,28 @@ pd.DataFrame.from_dict(file_rename_dict, orient="index").to_csv(
     "Genome_fastas/JMF-sample-ID-assemblies-before202507/file_rename_list.tsv",
     sep="\t",
 )
+
+# Exception handling
+
+Path("Genome_fastas/Paenibacillus_sp_JJ-340.fa.gz").unlink()
+Path("Genome_fastas/Paenibacillus_sp_JJ-340_1.fa.gz").rename(
+    "Genome_fastas/Paenibacillus_sp_JJ-340.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-299.fa.gz").rename(
+    "Genome_fastas/Paenibacillus_sp_JJ-299_0037B.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-299_1.fa.gz").rename(
+    "Genome_fastas/Paenibacillus_sp_JJ-299_0063B.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-160b-b1.fa.gz").symlink_to(
+    "Genome_fastas/JMF-sample-ID-assemblies-before202507/JMF-2310-15-0096B-ONT.flye.medaka1x.man.bin1.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-160b-b2.fa.gz").symlink_to(
+    "Genome_fastas/JMF-sample-ID-assemblies-before202507/JMF-2310-15-0096B-ONT.flye.medaka1x.man.bin2.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-90A-54-b1.fa.gz").symlink_to(
+    "Genome_fastas/JMF-sample-ID-assemblies-before202507/JMF-2310-15-0075B-ONT.flye.medaka1x.man.bin1.fa.gz"
+)
+Path("Genome_fastas/Paenibacillus_sp_JJ-90A-54-b2.fa.gz").symlink_to(
+    "Genome_fastas/JMF-sample-ID-assemblies-before202507/JMF-2310-15-0075B-ONT.flye.medaka1x.man.bin2.fa.gz"
+)

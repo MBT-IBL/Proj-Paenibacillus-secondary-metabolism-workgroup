@@ -8,7 +8,7 @@ from subprocess import CalledProcessError, run
 SCRIPT_ROOT = Path(__file__).parent.resolve()
 ANNOTATION_ROOT = SCRIPT_ROOT.parent.resolve() / "Annotation" / "20250727_bakta"
 
-THREADS = 16
+THREADS = 6  # More will not help
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

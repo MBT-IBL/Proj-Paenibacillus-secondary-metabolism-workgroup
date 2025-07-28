@@ -159,12 +159,12 @@ for subdir in busco_subdirs:
     logger.info("Removed subdirectory: %s", subdir)
 
 # Plot BUSCO results
-figure_path = busco_json_dir / "busco_figure.png"
-figure_path_final = busco_output_dir / "busco_figure.png"
-if figure_path.exists():
-    logger.info("BUSCO figure already exists: %s", figure_path)
-elif figure_path_final.exists():
-    logger.info("BUSCO figure already exists: %s", figure_path_final)
+figures = busco_json_dir.glob("busco_figure*.png")
+figures_final = busco_output_dir.glob("busco_figure*.png")
+if figures:
+    logger.info("BUSCO figure already exists: %s", figures)
+elif figures_final:
+    logger.info("BUSCO figure already exists: %s", figures_final)
 else:
     busco_plot_cmd = f"busco --plot {busco_json_dir}"
     busco_plot = run(
@@ -183,9 +183,10 @@ else:
         logger.error("STDERR: %s", busco_plot.stderr.strip())
     else:
         logger.info("BUSCO plot command completed successfully.")
-if figure_path.exists():
-    logger.info("Move figure to the output directory")
-    figure_path.rename(figure_path_final)
+if figures:
+    logger.info("Move figures to the output directory")
+    for figure_path in figures:
+        figure_path.rename(busco_output_dir / figure_path.name)
 
 # Move everything to the BUSCO_OUT directory
 for f in busco_output_dir.glob("*"):

@@ -202,3 +202,15 @@ except Exception as e:
     logger.error(
         "Failed to remove BUSCO output directory %s: %s", busco_output_dir, e
     )
+
+# Remove the symlink directory
+try:
+    for f in DIR_FAA.glob("*"):
+        if f.is_symlink():
+            f.unlink()
+    DIR_FAA.rmdir()
+    logger.info("Removed symlink directory: %s", DIR_FAA)
+except Exception as e:
+    logger.error("Failed to remove symlink directory %s: %s", DIR_FAA, e)
+logger.info("Script completed successfully.")
+# End of script

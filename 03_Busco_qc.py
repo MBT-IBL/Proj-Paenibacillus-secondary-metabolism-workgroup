@@ -107,8 +107,6 @@ else:
         logger.error("STDERR: %s", busco_run.stderr)
     else:
         logger.info("BUSCO run completed successfully.")
-        logger.info("STDOUT: %s", busco_run.stdout)
-        logger.info("STDERR: %s", busco_run.stderr)
 
 
 # Remove BUSCO temp files and collect results
@@ -181,10 +179,10 @@ else:
 
     if busco_plot.returncode != 0:
         logger.error("BUSCO plot command failed: %s", busco_plot.stderr.strip())
+        logger.error("STDOUT: %s", busco_plot.stdout.strip())
+        logger.error("STDERR: %s", busco_plot.stderr.strip())
     else:
         logger.info("BUSCO plot command completed successfully.")
-        logger.info("STDOUT: %s", busco_plot.stdout.strip())
-        logger.info("STDERR: %s", busco_plot.stderr.strip())
 if figure_path.exists():
     logger.info("Move figure to the output directory")
     figure_path.rename(figure_path_final)

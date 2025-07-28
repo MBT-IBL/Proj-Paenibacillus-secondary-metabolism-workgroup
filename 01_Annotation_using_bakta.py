@@ -80,8 +80,15 @@ for fasta_file in source_fastas:
     locus_tag = locus_tag_from_name(file_stem)
     outdir = ANNOTATION_ROOT / file_stem
     if outdir.exists():
-        logger.warning("Output directory %s already exists. Skipping.", outdir)
-        continue
+        logger.warning("Output directory %s already exists.", outdir)
+        if (outdir / (file_stem + ".fa.gbff")).exists():
+            logger.warning("Output annotations found. Skipping.")
+            continue
+        else:
+            logger.info("Removing existing output directory %s", outdir)
+            for item in outdir.iterdir():
+                item.unlink()
+            outdir.rmdir()
 
     bakta_cmd = withActivateEnvCmd(
         f"bakta --db {BAKTA_DB} "

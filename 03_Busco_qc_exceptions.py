@@ -10,17 +10,37 @@ from subprocess import run
 
 from pyBioinfo_modules.wrappers._environment_settings import withActivateEnvCmd
 
+exception_strain_files = [
+    "Paenibacillus_sp_JJ-249.fa.faa",
+    "Paenibacillus_sp_JJ-1823.fa.faa",
+    "Paenibacillus_sp_JM-513.fa.faa",
+    "Paenibacillus_sp_JJ-1835.fa.faa",
+    "Paenibacillus_sp_JJ-1810.fa.faa",
+    "Paenibacillus_sp_JJ-160b-b1.fa.faa",
+    "Paenibacillus_sp_JJ-1807.fa.faa",
+    "Paenibacillus_sp_JM-834.fa.faa",
+    "Paenibacillus_sp_JJ-1853.fa.faa",
+    "Paenibacillus_sp_JJ-1329.fa.faa",
+    "Paenibacillus_sp_JM-1335.fa.faa",
+    "Paenibacillus_sp_AP-115.fa.faa",
+    "Paenibacillus_sp_JJ-1282.fa.faa",
+    "Paenibacillus_sp_JM-162.fa.faa",
+    "Paenibacillus_sp_JJ-160.fa.faa",
+    "Paenibacillus_sp_JJ-1655.fa.faa",
+    "Paenibacillus_sp_JJ-90A-54-b1.fa.faa",
+]
+
 SCRIPT_ROOT = Path(__file__).parent.resolve()
 ANNOTATION_ROOT = SCRIPT_ROOT.parent.resolve() / "Annotation" / "20250727_bakta"
-log_file = ANNOTATION_ROOT.parent / ("20250727_bakta_faa_busco.log")
-DIR_FAA = ANNOTATION_ROOT.parent / "20250727_bakta_faa"
-BUSCO_OUT = ANNOTATION_ROOT.parent / "20250727_bakta_faa_busco"
+log_file = ANNOTATION_ROOT.parent / ("20250727_bakta_faa_busco_exceptions.log")
+DIR_FAA = ANNOTATION_ROOT.parent / "20250727_bakta_faa_exceptions"
+BUSCO_OUT = ANNOTATION_ROOT.parent / "20250727_bakta_faa_busco_exceptions"
 FAA_REL = Path("..")
 DIR_FAA.mkdir(exist_ok=True)
 BUSCO_DB = "/vol/local/shared_db/busco/"
 THREADS = 16
 busco_cmd = (
-    "busco -m protein --offline -l paenibacillus_odb12 "
+    "busco -m protein --auto-lineage "
     f"--download_path {BUSCO_DB} --out_path {BUSCO_OUT} "
     f"-i {DIR_FAA} --cpu {THREADS}"
 )
@@ -47,8 +67,10 @@ logger.addHandler(fh)
 
 # Collect faa files from bakta annotations
 faa_files = list(ANNOTATION_ROOT.glob("*/*.faa"))
-# Remove hypothetical protein files from list
-faa_files = [f for f in faa_files if "hypothetical" not in f.name.lower()]
+faa_files = [f for f in faa_files if f.name in exception_strain_files]
+assert len(faa_files) == len(
+    exception_strain_files
+), f"Expected {len(exception_strain_files)} files, found {len(faa_files)}"
 logger.info("Found %d faa files.", len(faa_files))
 
 for faa_file in faa_files:
@@ -86,6 +108,7 @@ for faa_file in faa_files:
 
 
 busco_output_dir = BUSCO_OUT / f"BUSCO_{DIR_FAA.name}"
+busco_batch_summary = BUSCO_OUT / "batch_summary.txt"
 # Run BUSCO on the folder
 if busco_output_dir.exists():
     logger.warning(

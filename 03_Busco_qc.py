@@ -124,6 +124,12 @@ for subdir in busco_subdirs:
                 shell=True,
                 check=True,
             )
+        elif f.is_symlink():
+            logger.info("Removing symlink: %s", f)
+            try:
+                f.unlink()
+            except Exception as e:
+                logger.error("Failed to remove symlink %s: %s", f, e)
         else:
             # Move file to the BUSCO_OUT directory
             if f.suffix == ".json":
@@ -150,6 +156,13 @@ for subdir in busco_subdirs:
                         f.relative_to(ANNOTATION_ROOT.parents[1]),
                         e,
                     )
+            else:
+                logger.warning(
+                    "Unexpected file type %s in BUSCO subdirectory %s",
+                    f.suffix,
+                    subdir,
+                )
+                f.unlink()  # Remove unexpected files
     # remove the subdirectory after moving files
     try:
         subdir.rmdir()
@@ -159,8 +172,8 @@ for subdir in busco_subdirs:
     logger.info("Removed subdirectory: %s", subdir)
 
 # Plot BUSCO results
-figures = busco_json_dir.glob("busco_figure*.png")
-figures_final = busco_output_dir.glob("busco_figure*.png")
+figures = list(busco_json_dir.glob("busco_figure*.png"))
+figures_final = list(busco_output_dir.glob("busco_figure*.png"))
 if figures:
     logger.info("BUSCO figure already exists: %s", figures)
 elif figures_final:
@@ -183,6 +196,7 @@ else:
         logger.error("STDERR: %s", busco_plot.stderr.strip())
     else:
         logger.info("BUSCO plot command completed successfully.")
+figures = list(busco_json_dir.glob("busco_figure*.png"))
 if figures:
     logger.info("Move figures to the output directory")
     for figure_path in figures:

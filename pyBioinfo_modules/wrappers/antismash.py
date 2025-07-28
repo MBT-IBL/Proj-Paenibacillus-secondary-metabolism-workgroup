@@ -12,13 +12,17 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
 from Bio.SeqRecord import SeqRecord
-from tqdm import tqdm
-
 from pyBioinfo_modules.basic.decompress import decompFileIfCompressed
-from pyBioinfo_modules.bio_sequences.bio_seq_file_extensions import \
-    FNA_EXTENSIONS
+from pyBioinfo_modules.bio_sequences.bio_seq_file_extensions import (
+    FNA_EXTENSIONS,
+)
 from pyBioinfo_modules.wrappers._environment_settings import (
-    ANTISMASH_ENV, CONDAEXE, SHELL, withActivateEnvCmd)
+    ANTISMASH_ENV,
+    CONDAEXE,
+    SHELL,
+    withActivateEnvCmd,
+)
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +141,6 @@ def runAntismash(
         cmd = (
             f"antismash --cpus {cpu}"
             + " --minimal"
-            + " --skip-zip-file"
             + f" --taxon {taxon}"
             + f" --html-title {outputPrefix}"
             + f" --output-dir {outdir}"
@@ -420,5 +423,9 @@ def find_NRPS_TE_domain(jsonResultPath: Path) -> list[SeqRecord]:
                         teDomains.append(teSeqRec)
                     domainList = []
 
+    jsonHandle.close()
+    return teDomains
+    jsonHandle.close()
+    return teDomains
     jsonHandle.close()
     return teDomains
